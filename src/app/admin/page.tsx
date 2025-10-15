@@ -16,9 +16,9 @@ export default async function DashboardPage() {
   }
 
   const [postStats, categoryStats, recentPosts] = await Promise.all([
-    api.post.getStats(),
+    api.post.getMyStats(),
     api.category.getStats(),
-    api.post.getAll({ limit: 5, offset: 0, sortBy: "latest" }),
+    api.post.getMyPosts({ limit: 5, offset: 0, sortBy: "latest" }),
   ]);
 
   const stats = [

@@ -44,11 +44,11 @@ export default function PostsManagementPage() {
   const publishedFilter =
     filter === "published" ? true : filter === "draft" ? false : undefined;
 
-  const { data, isLoading, refetch } = api.post.getAll.useQuery({
+  const { data, isLoading, refetch } = api.post.getMyPosts.useQuery({
     limit: 100,
     offset: 0,
     published: publishedFilter,
-    search: search || undefined,
+    sortBy: "latest",
   });
 
   const deletePost = api.post.delete.useMutation({
@@ -70,6 +70,11 @@ export default function PostsManagementPage() {
       toast.error(error.message);
     },
   });
+
+  // Client-side search filtering
+  const filteredPosts = data?.posts.filter((post) =>
+    post.title.toLowerCase().includes(search.toLowerCase())
+  ) ?? [];
 
   return (
     <div className="container py-12">
@@ -117,12 +122,16 @@ export default function PostsManagementPage() {
           <div className="p-12 text-center">
             <p className="text-muted-foreground">Loading posts...</p>
           </div>
-        ) : !data || data.posts.length === 0 ? (
+        ) : !data || filteredPosts.length === 0 ? (
           <div className="p-12 text-center">
-            <p className="text-muted-foreground mb-4">No posts found</p>
-            <Button asChild size="sm">
-              <Link href="/admin/posts/new">Create your first post</Link>
-            </Button>
+            <p className="text-muted-foreground mb-4">
+              {search ? "No posts match your search" : "No posts found"}
+            </p>
+            {!search && (
+              <Button asChild size="sm">
+                <Link href="/admin/posts/new">Create your first post</Link>
+              </Button>
+            )}
           </div>
         ) : (
           <Table>
@@ -136,7 +145,7 @@ export default function PostsManagementPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.posts.map((post) => (
+              {filteredPosts.map((post) => (
                 <TableRow key={post.id}>
                   <TableCell className="font-medium">{post.title}</TableCell>
                   <TableCell>
@@ -180,9 +189,9 @@ export default function PostsManagementPage() {
                         disabled={togglePublish.isPending}
                       >
                         {post.published ? (
-                          <EyeOff className="h-4 w-4" />
+                          <Eye className="h-4 w-4"  />
                         ) : (
-                          <Eye className="h-4 w-4" />
+                          <EyeOff className="h-4 w-4" />
                         )}
                       </Button>
                       <AlertDialog>

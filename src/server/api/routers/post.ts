@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { and, count, desc, eq, ilike, or, sql } from "drizzle-orm";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, publicProcedure, protectedProcedure } from "~/server/api/trpc";
 import { categories, postCategories, posts } from "~/server/db/schema";
 
 // Helper function to generate slug from title
@@ -204,7 +204,7 @@ export const postRouter = createTRPCRouter({
     }),
 
   // Create new post
-  create: publicProcedure
+  create: protectedProcedure
     .input(
       z.object({
         title: z.string().min(1).max(255),
@@ -236,6 +236,7 @@ export const postRouter = createTRPCRouter({
           slug,
           excerpt,
           published: input.published,
+          userId: parseInt(ctx.session.user.id!),
         })
         .returning();
 
@@ -253,7 +254,7 @@ export const postRouter = createTRPCRouter({
     }),
 
   // Update existing post
-  update: publicProcedure
+  update: protectedProcedure
     .input(
       z.object({
         id: z.number(),
@@ -267,6 +268,19 @@ export const postRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { id, categoryIds, ...updateData } = input;
+
+      // Verify ownership
+      const existingPost = await ctx.db.query.posts.findFirst({
+        where: eq(posts.id, id),
+      });
+
+      if (!existingPost) {
+        throw new Error("Post not found");
+      }
+
+      if (existingPost.userId !== parseInt(ctx.session.user.id!)) {
+        throw new Error("You don't have permission to edit this post");
+      }
 
       // If slug is provided or title changed, check uniqueness
       if (updateData.slug) {
@@ -306,16 +320,29 @@ export const postRouter = createTRPCRouter({
     }),
 
   // Delete post
-  delete: publicProcedure
+  delete: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
+      // Verify ownership
+      const post = await ctx.db.query.posts.findFirst({
+        where: eq(posts.id, input.id),
+      });
+
+      if (!post) {
+        throw new Error("Post not found");
+      }
+
+      if (post.userId !== parseInt(ctx.session.user.id!)) {
+        throw new Error("You don't have permission to delete this post");
+      }
+
       // Cascade delete will handle postCategories
       await ctx.db.delete(posts).where(eq(posts.id, input.id));
       return { success: true };
     }),
 
   // Toggle published status
-  togglePublish: publicProcedure
+  togglePublish: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const post = await ctx.db.query.posts.findFirst({
@@ -324,6 +351,10 @@ export const postRouter = createTRPCRouter({
 
       if (!post) {
         throw new Error("Post not found");
+      }
+
+      if (post.userId !== parseInt(ctx.session.user.id!)) {
+        throw new Error("You don't have permission to modify this post");
       }
 
       const [updated] = await ctx.db
@@ -373,4 +404,85 @@ export const postRouter = createTRPCRouter({
       drafts: draftPosts?.count ?? 0,
     };
   }),
+
+  // Get current user's stats
+  getMyStats: protectedProcedure.query(async ({ ctx }) => {
+    const userId = parseInt(ctx.session.user.id!);
+    
+    const [totalPosts] = await ctx.db
+      .select({ count: count() })
+      .from(posts)
+      .where(eq(posts.userId, userId));
+    const [publishedPosts] = await ctx.db
+      .select({ count: count() })
+      .from(posts)
+      .where(and(eq(posts.userId, userId), eq(posts.published, true)));
+    const [draftPosts] = await ctx.db
+      .select({ count: count() })
+      .from(posts)
+      .where(and(eq(posts.userId, userId), eq(posts.published, false)));
+
+    return {
+      total: totalPosts?.count ?? 0,
+      published: publishedPosts?.count ?? 0,
+      drafts: draftPosts?.count ?? 0,
+    };
+  }),
+
+  // Get current user's posts
+  getMyPosts: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).default(12),
+        offset: z.number().min(0).default(0),
+        published: z.boolean().optional(),
+        sortBy: z.enum(["latest", "oldest"]).default("latest"),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const userId = parseInt(ctx.session.user.id!);
+      const conditions = [eq(posts.userId, userId)];
+
+      // Filter by published status
+      if (input.published !== undefined) {
+        conditions.push(eq(posts.published, input.published));
+      }
+
+      const whereClause = and(...conditions);
+
+      // Get total count
+      const [totalResult] = await ctx.db
+        .select({ count: count() })
+        .from(posts)
+        .where(whereClause);
+
+      // Get posts with categories
+      const postsData = await ctx.db.query.posts.findMany({
+        where: whereClause,
+        orderBy:
+          input.sortBy === "latest" ? [desc(posts.createdAt)] : [posts.createdAt],
+        limit: input.limit,
+        offset: input.offset,
+        with: {
+          postCategories: {
+            with: {
+              category: true,
+            },
+          },
+        },
+      });
+
+      // Calculate reading time for each post
+      const postsWithMeta = postsData.map((post) => ({
+        ...post,
+        readingTime: calculateReadingTime(post.content),
+        categories: post.postCategories.map((pc) => pc.category),
+      }));
+
+      return {
+        posts: postsWithMeta,
+        total: totalResult?.count ?? 0,
+        hasMore: (input.offset + input.limit) < (totalResult?.count ?? 0),
+      };
+    }),
 });
