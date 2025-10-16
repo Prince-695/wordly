@@ -59,7 +59,7 @@ export function PostEditor({ post, mode }: PostEditorProps) {
       if (data) {
         router.push(`/blog/${data.slug}`);
       } else {
-        router.push("/admin/posts");
+        router.push("/admin");
       }
     },
     onError: (error) => {
@@ -70,7 +70,7 @@ export function PostEditor({ post, mode }: PostEditorProps) {
   const updatePost = api.post.update.useMutation({
     onSuccess: () => {
       toast.success("Post updated successfully!");
-      router.push("/admin/posts");
+      router.push("/admin");
     },
     onError: (error) => {
       toast.error(error.message);
@@ -80,7 +80,7 @@ export function PostEditor({ post, mode }: PostEditorProps) {
   const deletePost = api.post.delete.useMutation({
     onSuccess: () => {
       toast.success("Post deleted successfully!");
-      router.push("/admin/posts");
+      router.push("/admin");
     },
     onError: (error) => {
       toast.error(error.message);
