@@ -40,9 +40,19 @@ import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 
 export default function DashboardPage() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const utils = api.useUtils();
   const [filter, setFilter] = useState<"all" | "published" | "draft">("all");
   const [search, setSearch] = useState("");
+
+  // Show loading state while checking session
+  if (status === "loading") {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
 
   if (!session?.user) {
     redirect("/auth/signin");
@@ -54,7 +64,7 @@ export default function DashboardPage() {
   const { data: postStats } = api.post.getMyStats.useQuery();
   const { data: categoryStats } = api.category.getStats.useQuery();
   
-  const { data, isLoading, refetch } = api.post.getMyPosts.useQuery({
+  const { data, isLoading } = api.post.getMyPosts.useQuery({
     limit: 100,
     offset: 0,
     published: publishedFilter,
@@ -62,9 +72,12 @@ export default function DashboardPage() {
   });
 
   const deletePost = api.post.delete.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success("Post deleted!");
-      void refetch();
+      // Invalidate all related queries
+      await utils.post.getMyPosts.invalidate();
+      await utils.post.getMyStats.invalidate();
+      await utils.post.getAll.invalidate();
     },
     onError: (error) => {
       toast.error(error.message);
@@ -72,9 +85,12 @@ export default function DashboardPage() {
   });
 
   const togglePublish = api.post.togglePublish.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       toast.success(data?.published ? "Post published!" : "Post unpublished!");
-      void refetch();
+      // Invalidate all related queries
+      await utils.post.getMyPosts.invalidate();
+      await utils.post.getMyStats.invalidate();
+      await utils.post.getAll.invalidate();
     },
     onError: (error) => {
       toast.error(error.message);

@@ -42,6 +42,7 @@ interface PostEditorProps {
 
 export function PostEditor({ post, mode }: PostEditorProps) {
   const router = useRouter();
+  const utils = api.useUtils();
   const [title, setTitle] = useState(post?.title ?? "");
   const [postSlug, setPostSlug] = useState(post?.slug ?? "");
   const [content, setContent] = useState(post?.content ?? "");
@@ -54,13 +55,21 @@ export function PostEditor({ post, mode }: PostEditorProps) {
   const { data: categories } = api.category.getAll.useQuery();
 
   const createPost = api.post.create.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       toast.success("Post created successfully!");
+      
+      // Invalidate queries to refetch data
+      await utils.post.getMyPosts.invalidate();
+      await utils.post.getMyStats.invalidate();
+      await utils.post.getAll.invalidate();
+      
+      // Navigate after cache is invalidated
       if (data) {
         router.push(`/blog/${data.slug}`);
       } else {
         router.push("/admin");
       }
+      router.refresh();
     },
     onError: (error) => {
       toast.error(error.message || "Failed to create post");
@@ -68,9 +77,18 @@ export function PostEditor({ post, mode }: PostEditorProps) {
   });
 
   const updatePost = api.post.update.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success("Post updated successfully!");
+      
+      // Invalidate queries to refetch data
+      await utils.post.getMyPosts.invalidate();
+      await utils.post.getMyStats.invalidate();
+      await utils.post.getAll.invalidate();
+      await utils.post.getBySlug.invalidate();
+      
+      // Navigate after cache is invalidated
       router.push("/admin");
+      router.refresh();
     },
     onError: (error) => {
       toast.error(error.message);
@@ -78,9 +96,17 @@ export function PostEditor({ post, mode }: PostEditorProps) {
   });
 
   const deletePost = api.post.delete.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success("Post deleted successfully!");
+      
+      // Invalidate queries to refetch data
+      await utils.post.getMyPosts.invalidate();
+      await utils.post.getMyStats.invalidate();
+      await utils.post.getAll.invalidate();
+      
+      // Navigate after cache is invalidated
       router.push("/admin");
+      router.refresh();
     },
     onError: (error) => {
       toast.error(error.message);
