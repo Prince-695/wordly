@@ -865,23 +865,23 @@ Before going live, ensure:
 
 ## ⏱️ Development Time
 
-### Total Time Spent: ~40-50 hours
+### Total Time Spent: ~15-20 hours
 
 **Breakdown by Phase:**
 
 | Phase | Time | Details |
 |-------|------|---------|
-| **Planning & Setup** | 4 hours | Project structure, tech stack selection, database design |
-| **Authentication System** | 6 hours | NextAuth.js setup, sign in/up pages, middleware, session management |
-| **Database Schema & ORM** | 5 hours | Drizzle schema design, migrations, relationships, indexes |
-| **tRPC API Layer** | 8 hours | Router setup, all CRUD endpoints, validation, type safety |
-| **UI Components** | 10 hours | shadcn/ui setup, custom components, navbar, footer, forms |
-| **Blog Features** | 7 hours | Post listing, search, filters, markdown rendering, syntax highlighting |
-| **Admin Dashboard** | 6 hours | Dashboard UI, statistics, user-scoped data, CRUD operations |
-| **Landing Page** | 5 hours | Hero, features, stats, testimonials, CTA sections |
-| **Database Seeding** | 2 hours | Seed script with 20+ realistic posts and categories |
-| **Testing & Debugging** | 4 hours | Bug fixes, responsive design, cross-browser testing |
-| **Documentation** | 3 hours | README, setup guide, tRPC documentation |
+| **Planning & Setup** | 1 hours | Project structure, tech stack selection, database design |
+| **Authentication System** | 2 hours | NextAuth.js setup, sign in/up pages, middleware, session management |
+| **Database Schema & ORM** | 1.5 hours | Drizzle schema design, migrations, relationships, indexes |
+| **tRPC API Layer** | 3 hours | Router setup, all CRUD endpoints, validation, type safety |
+| **UI Components** | 2 hours | shadcn/ui setup, custom components, navbar, footer, forms |
+| **Blog Features** | 2 hours | Post listing, search, filters, markdown rendering, syntax highlighting |
+| **Admin Dashboard** | 2 hours | Dashboard UI, statistics, user-scoped data, CRUD operations |
+| **Landing Page** | 1 hours | Hero, features, stats, testimonials, CTA sections |
+| **Database Seeding** | 1 hours | Seed script with 20+ realistic posts and categories |
+| **Testing & Debugging** | 1 hours | Bug fixes, responsive design, cross-browser testing |
+| **Documentation** | 1 hours | README, setup guide, tRPC documentation |
 
 **Key Learnings:**
 - Next.js 15 App Router patterns and best practices
@@ -891,14 +891,6 @@ Before going live, ensure:
 - Type-safe environment variables with Zod
 
 ---
-
-## 📚 Documentation
-
-### Additional Guides
-
-- **[SETUP_GUIDE.md](./SETUP_GUIDE.md)** - Comprehensive setup instructions with detailed environment variable explanations
-- **[TRPC_AND_SEEDING_GUIDE.md](./TRPC_AND_SEEDING_GUIDE.md)** - 60+ page technical guide on tRPC architecture and database seeding
-- **[TESTING_CHECKLIST.md](./TESTING_CHECKLIST.md)** - Testing checklist for authentication and CRUD operations
 
 ### Available Scripts
 
@@ -924,30 +916,6 @@ pnpm format:check       # Check Prettier formatting
 pnpm format:write       # Auto-format with Prettier
 pnpm check              # Run lint + typecheck together
 ```
-
----
-
-## 📸 Screenshots
-
-### Landing Page
-Beautiful, modern landing page with hero section, features, statistics, and testimonials.
-
-### Blog Listing
-Clean blog listing with search, category filters, and responsive card layout.
-
-### Post Detail Page
-Individual post pages with markdown rendering and syntax-highlighted code blocks.
-
-### Admin Dashboard
-Personal admin panel showing user statistics and post management interface.
-
-### Create/Edit Post
-Rich markdown editor with live preview and category selection.
-
-### Authentication
-Secure sign in and sign up pages with form validation.
-
-*(Add actual screenshots after deployment)*
 
 ---
 
