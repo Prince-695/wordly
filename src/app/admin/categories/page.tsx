@@ -7,7 +7,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { Badge } from "~/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
+import { Card } from "~/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -106,48 +106,50 @@ export default function CategoriesPage() {
   };
 
   return (
-    <div className="container py-12">
-      <div className="mb-8 flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight mb-2">
-            Manage Categories
-          </h1>
-          <p className="text-muted-foreground">
-            Organize your posts with categories
-          </p>
-        </div>
-        <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              New Category
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <form onSubmit={handleCreate}>
-              <DialogHeader>
-                <DialogTitle>Create Category</DialogTitle>
-                <DialogDescription>
-                  Add a new category for organizing posts
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Name *</Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    placeholder="e.g., Technology"
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    name="description"
-                    placeholder="Brief description..."
-                    rows={3}
+    <div className="min-h-screen bg-background pt-24 pb-16">
+      <div className="container px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-4xl font-bold tracking-tight mb-2">
+              Categories
+            </h1>
+            <p className="text-muted-foreground">
+              Organize your posts with categories
+            </p>
+          </div>
+          <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+            <DialogTrigger asChild>
+              <Button className="rounded-full w-full sm:w-auto">
+                <Plus className="mr-2 h-4 w-4" />
+                New Category
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <form onSubmit={handleCreate}>
+                <DialogHeader>
+                  <DialogTitle>Create Category</DialogTitle>
+                  <DialogDescription>
+                    Add a new category for organizing posts
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Name *</Label>
+                    <Input
+                      id="name"
+                      name="name"
+                      placeholder="e.g., Technology"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="description">Description</Label>
+                    <Textarea
+                      id="description"
+                      name="description"
+                      placeholder="Brief description..."
+                      rows={3}
                   />
                 </div>
               </div>
@@ -168,44 +170,44 @@ export default function CategoriesPage() {
         </Dialog>
       </div>
 
-      <Card>
+      <Card className="border-muted/40">
         {isLoading ? (
-          <div className="p-12 text-center">
+          <div className="p-16 text-center">
             <p className="text-muted-foreground">Loading categories...</p>
           </div>
         ) : !categories || categories.length === 0 ? (
-          <div className="p-12 text-center">
+          <div className="p-16 text-center">
             <p className="text-muted-foreground mb-4">No categories yet</p>
-            <Button onClick={() => setCreateOpen(true)} size="sm">
+            <Button onClick={() => setCreateOpen(true)} size="sm" className="rounded-full">
               Create your first category
             </Button>
           </div>
         ) : (
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Slug</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>Posts</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="font-semibold">Name</TableHead>
+                <TableHead className="font-semibold">Slug</TableHead>
+                <TableHead className="font-semibold">Description</TableHead>
+                <TableHead className="font-semibold">Posts</TableHead>
+                <TableHead className="text-right font-semibold">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {categories.map((category) => (
-                <TableRow key={category.id}>
+                <TableRow key={category.id} className="group">
                   <TableCell className="font-medium">{category.name}</TableCell>
                   <TableCell>
-                    <code className="text-sm">{category.slug}</code>
+                    <code className="text-sm bg-muted/50 px-2 py-1 rounded">{category.slug}</code>
                   </TableCell>
                   <TableCell className="max-w-xs truncate text-sm text-muted-foreground">
-                    {category.description || "—"}
+                    {category.description ?? "—"}
                   </TableCell>
                   <TableCell>
-                    <Badge variant="secondary">{category.postCount}</Badge>
+                    <Badge variant="secondary" className="rounded-full">{category.postCount}</Badge>
                   </TableCell>
                   <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
+                    <div className="flex justify-end gap-1">
                       <Dialog open={editOpen && editingCategory?.id === category.id} onOpenChange={(open) => {
                         setEditOpen(open);
                         if (!open) setEditingCategory(null);
@@ -213,7 +215,8 @@ export default function CategoriesPage() {
                         <DialogTrigger asChild>
                           <Button
                             variant="ghost"
-                            size="sm"
+                            size="icon"
+                            className="h-8 w-8"
                             onClick={() => setEditingCategory(category)}
                           >
                             <Pencil className="h-4 w-4" />
@@ -273,7 +276,7 @@ export default function CategoriesPage() {
                       </Dialog>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <Button variant="ghost" size="sm">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive">
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </AlertDialogTrigger>
@@ -281,9 +284,9 @@ export default function CategoriesPage() {
                           <AlertDialogHeader>
                             <AlertDialogTitle>Delete Category?</AlertDialogTitle>
                             <AlertDialogDescription>
-                              This will delete &quot;{category.name}&quot;.
+                              This will permanently delete &quot;{category.name}&quot;.
                               {category.postCount > 0 && (
-                                <span className="block mt-2 text-destructive">
+                                <span className="block mt-2 text-destructive font-medium">
                                   Warning: This category has {category.postCount} post(s).
                                   Remove posts from this category first.
                                 </span>
@@ -310,6 +313,7 @@ export default function CategoriesPage() {
           </Table>
         )}
       </Card>
+      </div>
     </div>
   );
 }

@@ -32,43 +32,42 @@ export function BlogCard({
   published = true,
 }: BlogCardProps) {
   return (
-    <Link href={`/blog/${slug}`}>
-      <Card className="group h-full transition-all hover:shadow-lg hover:-translate-y-1">
-        <CardHeader>
-          <div className="flex flex-wrap gap-2 mb-2">
+    <Link href={`/blog/${slug}`} className="group">
+      <Card className="h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-primary/50">
+        <CardHeader className="space-y-3">
+          <div className="flex flex-wrap gap-2">
             {categories.slice(0, 2).map((category) => (
-              <Badge key={category.id} variant="secondary" className="text-xs">
+              <Badge key={category.id} variant="secondary" className="rounded-full text-xs">
                 {category.name}
               </Badge>
             ))}
             {!published && (
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="outline" className="rounded-full text-xs">
                 Draft
               </Badge>
             )}
           </div>
-          <h3 className="text-xl font-semibold line-clamp-2 group-hover:text-primary transition-colors">
+          <h3 className="text-xl font-bold line-clamp-2 group-hover:text-primary transition-colors">
             {title}
           </h3>
         </CardHeader>
         <CardContent>
           {excerpt && (
-            <p className="text-muted-foreground line-clamp-3 text-sm">
+            <p className="text-muted-foreground line-clamp-3 text-sm leading-relaxed">
               {excerpt}
             </p>
           )}
         </CardContent>
-        <CardFooter className="flex items-center justify-between text-xs text-muted-foreground">
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1">
-              <Calendar className="w-3 h-3" />
-              {format(new Date(createdAt), "MMM d, yyyy")}
-            </span>
-            <span className="flex items-center gap-1">
-              <Clock className="w-3 h-3" />
-              {readingTime} min read
-            </span>
-          </div>
+        <CardFooter className="flex items-center gap-4 text-xs text-muted-foreground">
+          <span className="flex items-center gap-1.5">
+            <Calendar className="w-3.5 h-3.5" />
+            {format(new Date(createdAt), "MMM d, yyyy")}
+          </span>
+          <span className="h-1 w-1 rounded-full bg-muted-foreground" />
+          <span className="flex items-center gap-1.5">
+            <Clock className="w-3.5 h-3.5" />
+            {readingTime} min
+          </span>
         </CardFooter>
       </Card>
     </Link>
