@@ -177,19 +177,6 @@
   }
 }
 
-/* Grid background pattern */
-.bg-grid-slate-100 {
-  background-image: linear-gradient(to right, rgb(241 245 249 / 0.2) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(241 245 249 / 0.2) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-.dark .bg-grid-slate-700\/25 {
-  background-image: linear-gradient(to right, rgb(51 65 85 / 0.25) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(51 65 85 / 0.25) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;

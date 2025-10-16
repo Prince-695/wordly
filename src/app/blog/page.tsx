@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { BlogCard } from "~/components/blog-card";
 import { BlogListSkeleton } from "~/components/blog-skeleton";
@@ -14,7 +14,7 @@ import { api } from "~/trpc/react";
 
 const POSTS_PER_PAGE = 12;
 
-export default function BlogPage() {
+function BlogContent() {
   const searchParams = useSearchParams();
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -168,5 +168,13 @@ export default function BlogPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function BlogPage() {
+  return (
+    <Suspense fallback={<BlogListSkeleton />}>
+      <BlogContent />
+    </Suspense>
   );
 }

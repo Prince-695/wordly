@@ -36,8 +36,8 @@ const features = [
 
 const Features = () => {
   return (
-    <section className="relative overflow-hidden border-y bg-muted/30 py-24 lg:py-32">
-      <div className="container relative">
+    <section className="relative w-full overflow-hidden border-y bg-muted/30 py-24 lg:py-32">
+      <div className="container relative mx-auto px-6 lg:px-8">
         {/* Section header */}
         <div className="mx-auto mb-16 max-w-3xl text-center">
           <div className="mb-4 inline-block rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary">

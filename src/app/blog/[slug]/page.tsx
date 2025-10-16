@@ -74,7 +74,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             {/* Categories */}
             <div className="mb-6 flex flex-wrap gap-2">
               {post.categories.map((category) => (
-                <Badge key={category.id} variant="secondary" className="rounded-full">
+                <Badge key={category.id} variant="default" className="rounded-full">
                   {category.name}
                 </Badge>
               ))}

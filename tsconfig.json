@@ -24,9 +24,6 @@
     "plugins": [{ "name": "next" }],
     "incremental": true,
 
-    /* Silence deprecation warnings */
-    "ignoreDeprecations": "6.0",
-
     /* Path Aliases */
     "baseUrl": ".",
     "paths": {
@@ -41,5 +38,10 @@
     "**/*.js",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
 }

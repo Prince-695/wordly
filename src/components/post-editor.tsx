@@ -154,7 +154,7 @@ export function PostEditor({ post, mode }: PostEditorProps) {
             </p>
           </div>
           <Button variant="ghost" asChild>
-            <Link href="/admin/posts">
+            <Link href="/admin">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back
             </Link>

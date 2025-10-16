@@ -4,11 +4,13 @@ import { ArrowRight, Pencil } from 'lucide-react'
 
 const CTA = () => {
   return (
-    <section className="relative overflow-hidden py-24 lg:py-32">
+    <section className="relative w-full overflow-hidden py-24 lg:py-32">
       {/* Subtle background decoration */}
       <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-3xl" />
+      <div className="absolute bottom-20 right-10 h-96 w-96 rounded-full bg-primary/20 blur-3xl" />
+      <div className="absolute top-20 left-10 h-72 w-72 rounded-full bg-primary/20 blur-3xl" />
       
-      <div className="container relative">
+      <div className="container relative mx-auto px-6 lg:px-8">
         <div className="mx-auto max-w-4xl">
           <div className="relative overflow-hidden rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-secondary/10 p-8 shadow-2xl backdrop-blur-sm sm:p-12 lg:p-16">
             {/* Decorative elements */}
@@ -58,10 +60,10 @@ const CTA = () => {
               </div>
 
               {/* Trust badge */}
-              <div className="mt-8 flex items-center justify-center gap-2 text-sm text-muted-foreground">
+              {/* <div className="mt-8 flex items-center justify-center gap-2 text-sm text-muted-foreground">
                 <div className="h-2 w-2 rounded-full bg-green-500" />
                 <span>No credit card required • Free to start</span>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

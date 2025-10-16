@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { Calendar, Clock } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
+import { Button } from "./ui/button";
 
 interface Category {
   id: number;
@@ -37,9 +38,9 @@ export function BlogCard({
         <CardHeader className="space-y-3">
           <div className="flex flex-wrap gap-2">
             {categories.slice(0, 2).map((category) => (
-              <Badge key={category.id} variant="secondary" className="rounded-full text-xs">
+              <Button key={category.id} variant="outline" className="rounded-full text-xs pointer-none h-6">
                 {category.name}
-              </Badge>
+              </Button>
             ))}
             {!published && (
               <Badge variant="outline" className="rounded-full text-xs">

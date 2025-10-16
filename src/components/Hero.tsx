@@ -6,12 +6,11 @@ const Hero = () => {
   return (
     <main className="relative min-h-[100vh] w-full overflow-hidden bg-background">
       {/* Decorative background elements */}
-      <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,transparent,black)] dark:bg-grid-slate-700/25" />
       <div className="absolute top-20 left-10 h-72 w-72 rounded-full bg-primary/20 blur-3xl" />
       <div className="absolute bottom-20 right-10 h-96 w-96 rounded-full bg-primary/20 blur-3xl" />
       
-      <div className="container relative">
-        <div className="mx-auto max-w-5xl px-6 py-24 text-center lg:px-8 lg:py-32">
+      <div className="container relative mx-auto px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-6 py-24 text-center lg:px-8 lg:py-32">
           {/* Badge */}
           <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-2 text-sm font-medium text-primary backdrop-blur-sm transition-all hover:border-primary/30 hover:bg-primary/15">
             <Sparkles className="h-4 w-4" />

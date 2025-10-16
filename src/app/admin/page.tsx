@@ -298,7 +298,6 @@ export default function DashboardPage() {
                             >
                               <Link
                                 href={`/blog/${post.slug}`}
-                                target="_blank"
                                 rel="noopener noreferrer"
                               >
                                 <ExternalLink className="h-4 w-4" />

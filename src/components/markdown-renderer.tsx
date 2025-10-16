@@ -43,7 +43,7 @@ export function MarkdownRenderer({ content, className = "" }: MarkdownRendererPr
             />
           ),
           code: ({ className, children, ...props }) => {
-            const match = /language-(\w+)/.exec(className || "");
+            const match = /language-(\w+)/.exec(className ?? "");
             return match ? (
               <code className={className} {...props}>
                 {children}

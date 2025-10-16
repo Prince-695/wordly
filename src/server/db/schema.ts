@@ -1,6 +1,6 @@
 // Database schema for Wordly blogging platform
 import { relations, sql } from "drizzle-orm";
-import { index, integer, pgTableCreator, text, timestamp, varchar, boolean, primaryKey } from "drizzle-orm/pg-core";
+import { index, pgTableCreator, primaryKey } from "drizzle-orm/pg-core";
 
 /**
  * Multi-project schema feature of Drizzle ORM
