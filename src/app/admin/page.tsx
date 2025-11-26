@@ -45,31 +45,28 @@ export default function DashboardPage() {
   const [filter, setFilter] = useState<"all" | "published" | "draft">("all");
   const [search, setSearch] = useState("");
 
-  // Show loading state while checking session
-  if (status === "loading") {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-muted-foreground">Loading...</p>
-      </div>
-    );
-  }
-
-  if (!session?.user) {
-    redirect("/auth/signin");
-  }
-
   const publishedFilter =
     filter === "published" ? true : filter === "draft" ? false : undefined;
 
-  const { data: postStats } = api.post.getMyStats.useQuery();
-  const { data: categoryStats } = api.category.getStats.useQuery();
-  
-  const { data, isLoading } = api.post.getMyPosts.useQuery({
-    limit: 100,
-    offset: 0,
-    published: publishedFilter,
-    sortBy: "latest",
+  // Call all hooks before any conditional returns
+  const { data: postStats } = api.post.getMyStats.useQuery(undefined, {
+    enabled: status === "authenticated",
   });
+  const { data: categoryStats } = api.category.getStats.useQuery(undefined, {
+    enabled: status === "authenticated",
+  });
+  
+  const { data, isLoading } = api.post.getMyPosts.useQuery(
+    {
+      limit: 100,
+      offset: 0,
+      published: publishedFilter,
+      sortBy: "latest",
+    },
+    {
+      enabled: status === "authenticated",
+    }
+  );
 
   const deletePost = api.post.delete.useMutation({
     onSuccess: async () => {
@@ -96,6 +93,19 @@ export default function DashboardPage() {
       toast.error(error.message);
     },
   });
+
+  // Show loading state while checking session
+  if (status === "loading") {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
+
+  if (!session?.user) {
+    redirect("/auth/signin");
+  }
 
   // Client-side search filtering
   const filteredPosts = data?.posts.filter((post) =>
